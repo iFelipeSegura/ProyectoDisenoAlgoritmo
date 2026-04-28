@@ -1,0 +1,76 @@
+1. Versión inicial: OSMnx + A* + aristas locales
+
+La primera versión utilizó:
+
+OSMnx para descargar la red vial desde OpenStreetMap.
+NetworkX para representar calles como grafos.
+Algoritmo A* para encontrar caminos óptimos entre nodos.
+
+Modelo utilizado basado en:
+Nodos: intersecciones o puntos de la red vial.
+Aristas: calles que conectan nodos.
+Peso de aristas: tiempo estimado o distancia.
+
+Problemas detectados:
+Tiempos poco realistas o iguales a 0.00 min.
+Dificultades para calcular correctamente pesos de aristas.
+Visualización deficiente de rutas en el mapa.
+Dependencia de calidad/localización de datos OpenStreetMap.
+Mayor complejidad técnica para depuración.
+
+2. Cambio de enfoque: integración con API
+
+Se decidió migrar parte del sistema a OpenRouteService, ¿Por qué se realizó el cambio?
+
+La API entrega directamente:
+
+distancias reales por calles
+tiempos estimados de conducción
+rutas alternativas
+geometría exacta para dibujar líneas sobre calles reales
+
+Esto mejora la confiabilidad y da una representación fiel a la realidad por parte del sistema.
+
+3. Nueva arquitectura híbrida, La versión final combina:
+
+-A* como lógica de decisión: El algoritmo A* se mantiene como base conceptual para evaluar opciones y seleccionar la mejor salida.
+
+-API como fuente de datos reales: OpenRouteService proporciona los costos reales (tiempo/distancia) y la geometría exacta de las rutas.
+
+4. Beneficios obtenidos:
+Resultados más cercanos a la realidad.
+Visualización clara y profesional.
+Rutas alternativas disponibles.
+Menor tiempo de desarrollo y corrección.
+Mejor presentación para demostración académica.
+
+YA NO SE USA OSMNX. ARQUITECTURA CONSISTE DE 3 CAPAS: PRESENTACIÓN(Streamlit + Folium)
+↓LÓGICA DE NEGOCIO(A* + selección + reglas)
+↓DATOS / SERVICIOS(OpenRouteService API + Geocoding)
+
+1. Capa de Presentación:
+
+Se mantiene igual:
+
+Streamlit
+Folium
+2. Capa de Lógica de Negocio
+
+Se mantiene y mejora:
+
+A* decide mejor cuartel
+comparación de rutas
+reglas del sistema
+manejo de alternativas
+
+3. Capa de Datos / Servicios Externos
+
+Ya no depende solo de archivos locales.
+
+Ahora usa:
+
+OpenRouteService (API externa)
+Geocodificación
+Tiempos reales
+Distancias reales
+Geometría de rutas
