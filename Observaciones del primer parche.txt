@@ -1,0 +1,27 @@
+Este informe resume el estado actual del proyecto J.O.S.E-O, analizando su robustez frente a errores de usuario, límites de infraestructura y lógica interna.
+
+1. Pruebas de Caja Negra (Validación de Entradas y Límites)
+Estas pruebas se centraron en la interacción del usuario con la interfaz y la precisión de los resultados sin mirar el código interno.
+
+Búsqueda fuera de Jurisdicción: Se realizaron pruebas ingresando calles de ciudades distintas (ej. "Ahumada, Santiago" o "Calle 13, Bogota").
+
+Resultado: El sistema respondió correctamente con un mensaje de error ("No se encontró la dirección"). Esto valida que la concatenación forzada de la cadena ", La Serena, Chile" actúa como un guardián de dominio efectivo.
+
+Búsqueda de Direcciones Inexistentes: Al ingresar combinaciones aleatorias de caracteres o números, el sistema no colapsó, manteniendo la estabilidad de la interfaz.
+
+2. Pruebas de Caja Gris (Integración y Servicios Externos)
+Aquí se analizó cómo el software "conversa" con los servidores de mapas y rutas. Este es el punto más crítico detectado.
+
+Bloqueo por Tasa de Peticiones (Spam): Las pruebas intensivas confirmaron un bloqueo temporal por parte de Nominatim.
+
+Causa: Nominatim es un servicio comunitario que no soporta ráfagas de peticiones (spam). El uso excesivo durante el testeo disparó las protecciones del servidor.
+
+Conclusión: La capa de servicios externos es actualmente el cuello de botella. Para un entorno real de emergencias, la dependencia de servicios gratuitos de "uso justo" representa un riesgo alto. Se requiere migrar a un proveedor con SLA (Acuerdo de Nivel de Servicio) o implementar una base de datos local de direcciones (caché).
+
+3. Pruebas de Caja Blanca (Lógica y Flujo Interno)
+Se verificó que los caminos lógicos del algoritmo A* y los manejadores de errores de Python funcionen.
+
+Resiliencia del Algoritmo: El código demostró ser lógicamente sólido. Al forzar errores manuales en la lista de cuarteles (coordenadas erróneas), el bloque try-except permitió que el sistema ignorara el dato corrupto y saltara automáticamente al siguiente cuartel disponible sin interrumpir el servicio al usuario.
+
+
+
