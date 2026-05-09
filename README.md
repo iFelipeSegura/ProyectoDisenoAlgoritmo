@@ -1,6 +1,6 @@
 # 🚒 J.O.S.E-O
 **Jerarquía Optimizada de Salidas en Emergencias**  
-La Serena, Chile — v0.7.0
+La Serena, Chile
 
 ---
 
